@@ -79,6 +79,7 @@ define([
     setRenderer: function(newRenderer) {
 
       this.layer.setRenderer(newRenderer);
+      this.layer.redraw();
 
     }
 /*

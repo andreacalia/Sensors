@@ -73,7 +73,7 @@ define([
 
     _datePickerHandler: function(ev, picker) {
 
-      this.settings.date = Date.parse(picker.startDate.format('YYYY-MM-DD'));
+      this.settings.date = picker.startDate.format('YYYY-MM-DD');
 
     },
 

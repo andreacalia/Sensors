@@ -21,44 +21,79 @@ function(
 
   var app = {};
 
-  var _showSidebar = function() {
+  app._showSidebar = function() {
 
     domClass.toggle(window.document.body, 'sidebar-open');
 
   };
 
-  var _loadRemoteData = function(isoDateFrom, isoDateTo) {
+  app._loadRemoteData = function(opt) {
 
-    return request.get('http://inti.init.uji.es:8080/Sensors/ws/?from='+isoDateFrom+'&to='+isoDateTo);
+    return request.get('http://inti.init.uji.es:8080/Sensors/ws/?from='+opt.isoDateFrom+'&to='+opt.isoDateTo, {
+      handleAs: 'json'
+    });
 
   };
 
-  var _handleSettingsChanges = function(newSettings) {
+  app._fixDateParameter = function(newSettings) {
 
-    var sensor = newSettings.sensor;
-    var year = newSettings.date.getYear();
-    var month = newSettings.date.getMonth();
-    var day = newSettings.date.getDate();
+    var dateFrom = newSettings.date + 'T00:00:00Z';
+    var dateTo = newSettings.date + 'T23:59:59Z';
 
-    var dateFrom = new Date(year, month, day, 0, 0, 0);
-    var dateTo = new Date(year, month, day, 23, 59, 59);
-
-
+    return {
+      isoDateFrom: dateFrom,
+      isoDateTo: dateTo
+    };
 
   };
 
   // Sidebar button
-  on(dom.byId('sidebar-toggle'), 'click', _showSidebar);
+  on(dom.byId('sidebar-toggle'), 'click', app._showSidebar);
 
 
   app.mapWidget = new MapWidget({}, 'mapControls');
   app.settingsWidget = new SettingsWidget({}, 'sidebar');
 
-  console.log(RendererFactory.createClassBreaksRenderer(_.range(1, 10)));
+
 
   // app topics
-  topic.subscribe('settings/update', function(newSettings) {
-    console.log(newSettings);
+  topic.subscribe('settings/update', function(settings) {
+
+    var remoteParameters = app._fixDateParameter(settings);
+
+    app._loadRemoteData(remoteParameters).then(function(buildings){
+
+      var data = [];
+
+      // Aggregate the values depending on the sensor
+      _.each(buildings, function(building) {
+
+        var sensorSamplesSum = _.reduce(building.samples, function(memo, sample) { return memo + sample[settings.sensor];}, 0);
+        var sensorSampleLength = _.size(building.samples);
+
+        var sensorValue = sensorSamplesSum / sensorSampleLength;
+
+        console.log(sensorValue);
+
+        data.push({
+          building: building.id,
+          sensorValue: sensorValue
+        });
+
+      });
+
+      // Create renderer
+      var renderer = RendererFactory.createClassBreaksRenderer(data);
+
+      // Set the renderer
+      app.mapWidget.setRenderer(renderer);
+
+    }, function(error) {
+
+      console.error(error);
+
+    });
+
   });
 
   return app;
