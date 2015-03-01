@@ -12,10 +12,12 @@ define([
   'app/settings-widget',
   'app/renderer-factory',
 
+  'esri/dijit/Legend',
+
   'dojo/domReady!'],
 function(
   query, dom, domClass, domStyle, topic, on, Deferred, request,
-  MapWidget, SettingsWidget, RendererFactory
+  MapWidget, SettingsWidget, RendererFactory, Legend
 ) {
   'use strict';
 
@@ -30,7 +32,10 @@ function(
   app._loadRemoteData = function(opt) {
 
     return request.get('http://inti.init.uji.es:8080/Sensors/ws/?from='+opt.isoDateFrom+'&to='+opt.isoDateTo, {
-      handleAs: 'json'
+      handleAs: 'json',
+      headers: {
+          "X-Requested-With": null
+      }
     });
 
   };
@@ -52,8 +57,16 @@ function(
 
 
   app.mapWidget = new MapWidget({}, 'mapControls');
-  app.settingsWidget = new SettingsWidget({}, 'sidebar');
+  app.settingsWidget = new SettingsWidget({}, 'controls');
 
+  // Legend
+  app.legend = new Legend({
+
+    map: app.mapWidget.map
+
+  },"legend");
+
+  app.legend.startup();
 
 
   // app topics
@@ -82,11 +95,15 @@ function(
 
       });
 
+      var colorMap = RendererFactory.sensorColorMap[settings.sensor];
+
       // Create renderer
-      var renderer = RendererFactory.createClassBreaksRenderer(data);
+      var renderer = RendererFactory.createClassBreaksRenderer(data, colorMap);
 
       // Set the renderer
       app.mapWidget.setRenderer(renderer);
+
+      app.legend.refresh();
 
     }, function(error) {
 

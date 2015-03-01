@@ -66,7 +66,7 @@ define([
         '<img src="${PhotoLink}" class="img-thumbnail">'
       );
 
-      this.layer = new FeatureLayer('http://smart.uji.es/adaptor/rest/services/SmartCampus/BuildingsNew/MapServer/0', {
+      this.layer = new FeatureLayer('http://mastergeotech.dlsi.uji.es:6080/arcgis/rest/services/Eias_al311536/ComplexLab5/MapServer/14', {
         infoTemplate: infoTemplate,
         outFields: ['FACILITYKEY', 'LONGNAME', 'PhotoLink', 'Link'],
         opacity: 0.9
@@ -82,58 +82,6 @@ define([
       this.layer.redraw();
 
     }
-/*
-    // init map widgets if they are in config
-    _initWidgets: function() {
-      var self = this;
-      if (!this.widgets) {
-        return;
-      }
 
-      // scalebar
-      if (this.widgets.scalebar) {
-        this.scalebar = new Scalebar(lang.mixin({
-          map: this.map,
-          scalebarUnit: 'dual'
-        }, this.widgets.scalebar));
-      }
-
-      // home button
-      if (this.widgets.homeButton) {
-        this.homeButton = new HomeButton(lang.mixin({
-          map: this.map
-        }, this.widgets.homeButton), this.homeNode);
-        this.homeButton.startup();
-      }
-
-      // locate button
-      if (this.widgets.locateButton) {
-        this.locateButton = new LocateButton(lang.mixin({
-          map: this.map,
-          'class': 'locate-button'
-        }, this.widgets.locateButton), this.locateNode);
-        this.locateButton.startup();
-      }
-
-      // geocoder
-      if (this.widgets.geocoder) {
-        this.geocoder = new Geocoder(lang.mixin({
-          map: this.map,
-          'class': 'geocoder'
-        }, this.widgets.geocoder), this.searchNode);
-        this.geocoder.startup();
-        this.own(this.geocoder.on('select', function(e) {
-          domClass.remove(self.geocoder.domNode, 'shown');
-        }));
-      }
-    },
-/*
-    getMapHeight: function() {
-      if(this.map)
-        return this.map.height;
-
-      return 0;
-    }
-*/
   });
 });
