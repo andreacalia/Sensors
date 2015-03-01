@@ -1,0 +1,34 @@
+<div>
+	<div data-dojo-attach-point="sensorTypeContainer">
+		<h3>Which sensor?</h3>
+		<div class="radio">
+		  <label>
+		    <input type="radio" name="sensor-type" id="sensor-type-light" value="light">
+		    Light
+		  </label>
+		</div>
+		<div class="radio">
+		  <label>
+		    <input type="radio" name="sensor-type" id="sensor-type-temperature" value="temperature">
+		    Temperature
+		  </label>
+		</div>
+		<div class="radio">
+		  <label>
+		    <input type="radio" name="sensor-type" id="sensor-type-humidity" value="humidity">
+		    Humidity
+		  </label>
+		</div>
+	</div>
+
+	<div data-dojo-attach-point="dateContainer">
+		<h3>When?</h3>
+		<div class="form-group">
+			<div class="input-group">
+				<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" id="date-selector" class="form-control">
+			</div>
+		</div>
+	</div>
+
+	<button type="button" class="btn btn-primary form-control" data-dojo-attach-point="submitButton" >Get the data</button>
+</div>
