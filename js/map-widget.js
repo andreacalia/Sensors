@@ -66,7 +66,8 @@ define([
         '<img src="${PhotoLink}" class="img-thumbnail">'
       );
 
-      this.layer = new FeatureLayer('http://mastergeotech.dlsi.uji.es:6080/arcgis/rest/services/Eias_al311536/ComplexLab5/MapServer/14', {
+      //this.layer = new FeatureLayer('http://mastergeotech.dlsi.uji.es:6080/arcgis/rest/services/Eias_al311536/ComplexLab5/MapServer/14', {
+      this.layer = new FeatureLayer('http://smart.uji.es/adaptor/rest/services/SmartCampus/BuildingsNew/MapServer/0', {
         infoTemplate: infoTemplate,
         outFields: ['FACILITYKEY', 'LONGNAME', 'PhotoLink', 'Link'],
         opacity: 0.9
